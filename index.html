@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kotten.undo.it - Haven</title>
+    <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="w-full max-w-lg p-8 font-mono text-sm sm:text-base text-text-light">
+            <div id="loader-output" class="space-y-1"></div>
+            <div class="mt-2 flex items-center">
+                <span style="color:var(--glow-primary);">&gt;</span>
+                <div class="blinking-cursor w-2 h-4 ml-2" style="background-color:var(--glow-primary);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="interactive-bg"></div>
+    
+    <div id="main-wrapper">
+        <div class="max-w-7xl mx-auto lg:grid lg:grid-cols-12 lg:gap-16 px-4 sm:px-8 py-12 md:py-24">
+            
+            <aside class="lg:col-span-4 lg:sticky lg:top-0 lg:self-start py-8 lg:py-24">
+                <div class="flex flex-col gap-8">
+                    <div>
+                        <h1 class="glitch text-4xl font-bold text-white" data-text="Kotten">Kotten</h1>
+                        <h2 class="mt-2 text-lg text-white">Software Engineer & Systems Enthusiast</h2>
+                        <p class="mt-4 text-sm leading-relaxed text-text-dark">Network engineer and back-end developer from Sweden, exploring the depths of systems and software architecture.</p>
+                    </div>
+                    
+
+                    <nav id="main-nav" class="relative lg:block">
+                        <ul class="flex flex-col gap-4">
+                            <li><a href="#about" class="nav-link group flex items-center gap-2"><span>About</span></a></li>
+                            <li><a href="#projects" class="nav-link group flex items-center gap-2"><span>Projects</span></a></li>
+                            <li><a href="#repositories" class="nav-link group flex items-center gap-2"><span>Repositories</span></a></li>
+                            <li><a href="#photography" class="nav-link group flex items-center gap-2"><span>Photography</span></a></li>
+                            <li><a href="#setup" class="nav-link group flex items-center gap-2"><span>Setup</span></a></li>
+                        </ul>
+                    </nav>
+
+                    <div id="social-links" class="flex items-center gap-4"></div>
+                    
+                    <div id="status-widget" class="pt-4 border-t border-gray-800/50">
+                         <div class="flex items-center gap-4">
+                            <img id="album-art" src="" class="w-14 h-14 rounded-md flex-shrink-0 hidden shadow-lg" alt="Spotify Album Art"/>
+                            <div id="status-container" class="text-sm min-w-0 flex flex-col justify-center">
+                                 <div id="spotify-info" class="hidden">
+                                    <div class="font-semibold text-text-light truncate" id="spotify-song"></div>
+                                    <div class="text-xs text-text-dark truncate" id="spotify-artist"></div>
+                                </div>
+                                <div id="discord-info" class="flex items-center gap-2 text-text-dark text-xs">
+                                    <div id="discord-status-dot" class="status-dot bg-gray-500"></div>
+                                    <span id="discord-status-text">Connecting...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="weather-widget" class="text-sm text-text-dark flex items-center"></div>
+                </div>
+            </aside>
+
+            <main class="lg:col-span-8 mt-16 lg:mt-0">
+                <div class="flex flex-col gap-16">
+                    <section id="about" class="section-card p-8 scroll-reveal">
+                        <h3 class="text-2xl font-bold text-white mb-6">About Me</h3>
+                        <div class="space-y-4 text-text-dark text-sm">
+                            <p><strong>Hey!</strong> I'm Kotten, a network engineer and back-end developer from Sweden. I’m passionate about systems, coding, and always exploring how things work under the surface. I primarily work with C++, but enjoy using a variety of languages and frameworks.</p>
+                            <p>My journey in tech is driven by a curiosity for low-level development, from kernel-mode programming to reverse engineering complex software. I'm currently freelancing and always looking for new challenges to tackle.</p>
+                        </div>
+                        <h4 class="text-xl font-semibold text-white mt-8 mb-4">Skill Cloud</h4>
+                        <div id="skill-cloud" class="flex flex-wrap gap-2"></div>
+                    </section>
+
+                    <section id="projects" class="section-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-6">Featured Projects</h3>
+                        <div id="project-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                    </section>
+
+                    <section id="repositories" class="section-card p-8">
+                        <h3 class="text-2xl font-bold text-white mb-6">Latest Repositories</h3>
+                        <div id="repo-list" class="flex flex-col gap-4">
+                            <p class="text-text-dark text-sm">Fetching repositories...</p>
+                        </div>
+                    </section>
+
+                    <section id="photography" class="section-card p-8 scroll-reveal">
+                        <h3 class="text-2xl font-bold text-white mb-6">Photography</h3>
+                        <p class="text-text-dark mb-6 text-sm">A few snapshots from my travels.</p>
+                        <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4"></div>
+                    </section>
+                    
+                    <section id="setup" class="section-card p-8 scroll-reveal">
+                        <h3 class="text-2xl font-bold text-white mb-6">My Setup</h3>
+                        <div id="setup-list" class="space-y-6"></div>
+                    </section>
+
+                     <section id="contact" class="section-card p-8 scroll-reveal">
+                        <h3 class="text-2xl font-bold text-white mb-4">Get in Touch</h3>
+                        <div class="flex items-center justify-between gap-4 bg-black/20 p-4 rounded-lg">
+                            <span id="email-address" class="text-text-dark font-mono text-sm"></span>
+                            <button id="copy-email-btn" class="ml-auto bg-[var(--glow-primary)] hover:bg-[var(--glow-secondary)] text-black font-semibold py-2 px-4 rounded-lg transition-all duration-200 flex items-center gap-2 text-sm active:scale-95 focus:outline-none focus:ring-2 focus:ring-[var(--glow-primary)]">
+                                <i data-feather="copy" class="w-4 h-4"></i><span id="copy-text">Copy</span>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <div id="modal-container"></div>
+    <div id="lightbox-container"></div>
+    <div id="theme-picker"></div>
+    
+    <div id="cli-container">
+        <div id="cli-output" class="pr-4"></div>
+        <div class="flex-shrink-0 flex items-center mt-2 font-mono"><span class="text-[var(--glow-primary)] flex-shrink-0">user@kotten:~$ </span><input type="text" id="cli-input" class="ml-2 bg-transparent border-none outline-none w-full text-text-light" autofocus/></div>
+        <div class="text-xs text-text-dark mt-2 font-mono">Type 'help' for commands or 'exit' to close. (Shortcut: 't' to open, 'Esc' to close)</div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="data.js"></script>
+    <script src="utils.js"></script>
+    <script src="main.js"></script>
+
+    <script>
+        console.log("Hello, Friend!");
+        console.log("Are you here to paste my website?");
+    </script>
+</body>
+</html>

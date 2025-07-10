@@ -14,7 +14,8 @@ const portfolioData = {
     socials: {
         GitHub: { url: 'https://github.com/KottenFAC', icon: 'github', label: 'My GitHub Profile' },
         Steam: { url: 'https://steamcommunity.com/id/KottenFAC/', icon: 'steam', label: 'My Steam Profile' },
-        Discord: { url: 'https://discord.com/invite/hFV2zJe7Fc', icon: 'discord', label: 'Join my Discord Server' }
+        Discord: { url: 'https://discord.com/invite/hFV2zJe7Fc', icon: 'discord', label: 'Join my Discord Server' },
+        Gamesense: { url: 'https://gamesense.pub/forums/profile.php?id=7624', icon: 'gamesenset', label: 'My Gamesense Profile' },
     },
     setup: {
         "Hardware & Office": ["LG 27GP850 (Main Monitor)", "AOC C24G1 (Second Monitor)", "Custom Built PC (AMD Ryzen 7 5700x, RTX 4060)", "Endgame Gear KB65HE Keyboard", "VXE R1 PRO MAX (Ghostglides Edgerunner Cyclone PTFE DOTS)", "X-raypad Origin Pro soft XL Mousepad", "HyperX Cloud Alpha S", "Genesis Radium 300 Studio XLR Mic", "M-Audio Solo Track"],
@@ -51,5 +52,6 @@ const colorThemes = {
 const customIcons = {
     steam: `<img src="static/icons/steam.svg" alt="Steam Icon" class="w-5 h-5" style="filter: invert(100%);" />`,
     discord: `<img src="static/icons/discord.svg" alt="Discord Icon" class="w-5 h-5" style="filter: invert(100%);" />`,
-    github: `<img src="static/icons/github.svg" alt="GitHub Icon" class="w-5 h-5" style="filter: invert(100%);" />`
+    github: `<img src="static/icons/github.svg" alt="GitHub Icon" class="w-5 h-5" style="filter: invert(100%);" />`,
+    gamesense: `<img src="static/icons/gs.svg" alt="Gamesense Icon" class="w-5 h-5" style="filter: invert(100%);" />`
 };

@@ -71,58 +71,6 @@ function closeModal() {
     }
 }
 
-let currentLightboxIndex = 0;
-
-/**
- * Opens the lightbox with a specific image from the gallery.
- * @param {number} index - The index of the image in the `portfolioData.photoGallery` array.
- */
-function openLightbox(index) {
-    currentLightboxIndex = index;
-    const photo = portfolioData.photoGallery[index];
-    const lightboxContainer = document.getElementById('lightbox-container');
-    
-    lightboxContainer.innerHTML = `
-        <div id="lightbox-overlay" class="lightbox-overlay" role="dialog" aria-modal="true" onclick="closeLightbox()">
-            <div class="lightbox-content" onclick="event.stopPropagation()">
-                 <i data-feather="x" class="modal-close-btn" onclick="closeLightbox()"></i>
-                 <button class="lightbox-nav prev" onclick="navigateLightbox(-1)"><i data-feather="chevron-left"></i></button>
-                 <img src="${photo.full}" class="lightbox-img" alt="${photo.caption}">
-                 <button class="lightbox-nav next" onclick="navigateLightbox(1)"><i data-feather="chevron-right"></i></button>
-                 <div id="lightbox-caption" class="lightbox-caption">${photo.caption}</div>
-            </div>
-        </div>`;
-    feather.replace();
-    setTimeout(() => {
-        const overlay = document.getElementById('lightbox-overlay');
-        overlay.classList.add('visible');
-        overlay.focus();
-    }, 10);
-}
-
-/**
- * Navigates to the next or previous image in the lightbox.
- * @param {number} direction - 1 for next, -1 for previous.
- */
-function navigateLightbox(direction) {
-    currentLightboxIndex += direction;
-    const gallery = portfolioData.photoGallery;
-    if (currentLightboxIndex < 0) currentLightboxIndex = gallery.length - 1;
-    if (currentLightboxIndex >= gallery.length) currentLightboxIndex = 0;
-    
-    const photo = gallery[currentLightboxIndex];
-    document.querySelector('.lightbox-img').src = photo.full;
-    document.getElementById('lightbox-caption').textContent = photo.caption;
-}
-
-function closeLightbox() {
-    const overlay = document.getElementById('lightbox-overlay');
-    if (overlay) {
-        overlay.classList.remove('visible');
-        setTimeout(() => { overlay.remove(); }, 300);
-    }
-}
-
 /**
  * Filters projects and repositories based on a selected skill.
  * @param {string} skill - The skill to filter by.

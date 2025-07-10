@@ -16,16 +16,16 @@ const portfolioData = {
         Steam: { url: 'https://steamcommunity.com/id/KottenFAC/', icon: 'steam', label: 'My Steam Profile' },
         Discord: { url: 'https://discord.com/invite/hFV2zJe7Fc', icon: 'discord', label: 'Join my Discord Server' }
     },
-    photoGallery: [
-        { thumb: 'https://placehold.co/600x600/010206/4A80F0?text=Urban&bg=10121A', full: 'https://placehold.co/1200x800/010206/4A80F0?text=Urban&bg=10121A', caption: 'Urban Exploration #1' },
-        { thumb: 'https://placehold.co/600x600/010206/4A80F0?text=Night&bg=10121A', full: 'https://placehold.co/1200x800/010206/4A80F0?text=Night&bg=10121A', caption: 'City at Night' },
-    ],
     setup: {
         "Hardware & Office": ["LG 27GP850 (Main Monitor)", "AOC C24G1 (Second Monitor)", "Custom Built PC (AMD Ryzen 7 5700x, RTX 4060)", "Endgame Gear KB65HE Keyboard", "VXE R1 PRO MAX (Ghostglides Edgerunner Cyclone PTFE DOTS)", "X-raypad Origin Pro soft XL Mousepad", "HyperX Cloud Alpha S", "Genesis Radium 300 Studio XLR Mic", "M-Audio Solo Track"],
         "Development": ["Visual Studio 2022", "VS Code", "x64dbg", "IDA Pro", "Wireshark", "Cheat Engine", "Spotify (Essential)"],
         "Software & Productivity": ["Windows 11", "Linux Mint (Server)", "Ubuntu 20.04 (Second Server)", "Proton Suite"],
         "Cheat software": ["Gamesense.pub", "Plaguecheat.cc"]
-    }
+    },
+    youtubeVideos: [
+        { id: 'TA_9arUbIvw', title: 'cs2 hvh ft skeet.cc #1 / gamesense.pub' },
+        { id: 'cPWil2cjOxs', title: 'cs2 hvh ft skeet.cc #2 / gamesense.pub' }
+    ]
 };
 
 const languageColors = {

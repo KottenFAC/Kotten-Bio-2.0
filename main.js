@@ -119,14 +119,30 @@ document.addEventListener('DOMContentLoaded', () => {
         ).join('');
         projectList.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
 
-        document.getElementById('photo-gallery').innerHTML = portfolioData.photoGallery.map((photo, index) => `<img src="${photo.thumb}" loading="lazy" class="w-full h-full object-cover rounded-md border border-transparent hover:border-[var(--border-hover)] transition cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--glow-accent)]" tabindex="0" onclick="openLightbox(${index})" alt="${photo.caption}">`).join('');
         document.getElementById('setup-list').innerHTML = Object.entries(portfolioData.setup).map(([category, items]) => `<div><h4 class="text-lg font-semibold text-white mb-2">${category}</h4><ul class="list-disc list-inside text-text-dark space-y-1 text-sm">${items.map(item => `<li>${item}</li>`).join('')}</ul></div>`).join('');
         document.getElementById('email-address').textContent = portfolioData.email;
         const copyBtn = document.getElementById('copy-email-btn');
         if (copyBtn) copyBtn.addEventListener('click', () => { document.execCommand('copy', false, portfolioData.email); const copyText = document.getElementById('copy-text'); copyText.textContent = 'Copied!'; copyBtn.querySelector('i').outerHTML = `<i data-feather="check" class="w-4 h-4"></i>`; feather.replace(); setTimeout(() => { copyText.textContent = 'Copy'; copyBtn.querySelector('i').outerHTML = `<i data-feather="copy" class="w-4 h-4"></i>`; feather.replace(); }, 2000); });
         
+        renderYouTubeVideos();
         fetchGitHubRepos();
         feather.replace();
+    }
+
+    function renderYouTubeVideos() {
+        const videoSection = document.getElementById('videos');
+        if (!videoSection) return;
+
+        const videoContent = portfolioData.youtubeVideos.map(video => `
+            <div>
+                <h4 class="text-lg font-semibold text-white mb-2">${video.title}</h4>
+                <div class="aspect-video w-full">
+                    <iframe class="w-full h-full rounded-lg shadow-lg" src="https://www.youtube.com/embed/${video.id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+        `).join('');
+
+        videoSection.querySelector('.grid').innerHTML = videoContent;
     }
 
     async function fetchGitHubRepos() {

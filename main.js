@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (copyBtn) copyBtn.addEventListener('click', () => { document.execCommand('copy', false, portfolioData.email); const copyText = document.getElementById('copy-text'); copyText.textContent = 'Copied!'; copyBtn.querySelector('i').outerHTML = `<i data-feather="check" class="w-4 h-4"></i>`; feather.replace(); setTimeout(() => { copyText.textContent = 'Copy'; copyBtn.querySelector('i').outerHTML = `<i data-feather="copy" class="w-4 h-4"></i>`; feather.replace(); }, 2000); });
         
         renderYouTubeVideos();
+        renderPhotoGallery();
         fetchGitHubRepos();
         feather.replace();
     }
@@ -143,6 +144,57 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
 
         videoSection.querySelector('.grid').innerHTML = videoContent;
+    }
+
+    let currentPhotoIndex = 0;
+    let allPhotos = [];
+
+    function renderPhotoGallery() {
+        const gallery = document.getElementById('photo-gallery');
+        if (!gallery) return;
+
+        allPhotos = portfolioData.photoGallery; // Store all photos for lightbox navigation
+
+        const photosHtml = allPhotos.map((photo, index) => `
+            <div class="gallery-item" onclick="openLightbox('photos/${photo}', ${index})">
+                <img src="photos/${photo}" alt="${photo}" class="w-full h-full object-cover rounded-lg shadow-lg">
+            </div>
+        `).join('');
+
+        gallery.innerHTML = photosHtml;
+    }
+
+    function openLightbox(src, index) {
+        const lightboxOverlay = document.getElementById('lightbox-overlay');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        
+        if (!lightboxOverlay || !lightboxImg) return;
+
+        currentPhotoIndex = index;
+        lightboxImg.src = src;
+        lightboxImg.alt = allPhotos[index];
+        lightboxCaption.textContent = allPhotos[index];
+        lightboxOverlay.classList.add('visible');
+        document.body.classList.add('overflow-hidden'); // Prevent scrolling
+    }
+
+    function closeLightbox() {
+        const lightboxOverlay = document.getElementById('lightbox-overlay');
+        if (lightboxOverlay) {
+            lightboxOverlay.classList.remove('visible');
+            document.body.classList.remove('overflow-hidden');
+        }
+    }
+
+    function navigateLightbox(direction) {
+        currentPhotoIndex += direction;
+        if (currentPhotoIndex < 0) {
+            currentPhotoIndex = allPhotos.length - 1;
+        } else if (currentPhotoIndex >= allPhotos.length) {
+            currentPhotoIndex = 0;
+        }
+        openLightbox(`photos/${allPhotos[currentPhotoIndex]}`, currentPhotoIndex);
     }
 
     async function fetchGitHubRepos() {
@@ -388,10 +440,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else if (document.getElementById('modal-overlay') && document.getElementById('modal-overlay').classList.contains('visible')) {
                     closeModal();
                 }
-            } 
+            } else if (document.getElementById('lightbox-overlay') && document.getElementById('lightbox-overlay').classList.contains('visible')) {
+                if (e.key === 'ArrowLeft') {
+                    navigateLightbox(-1);
+                } else if (e.key === 'ArrowRight') {
+                    navigateLightbox(1);
+                }
+            }
         });
     }
     
+    // Expose functions to global scope for onclick events
+    window.openLightbox = openLightbox;
+    window.closeLightbox = closeLightbox;
+    window.navigateLightbox = navigateLightbox;
+
     // ** Run Initializers **
     initLoaderAndData(); 
     initInteractiveBg();

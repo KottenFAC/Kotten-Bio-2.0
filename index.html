@@ -47,6 +47,7 @@
                             <li><a href="#projects" class="nav-link group flex items-center gap-2"><span>Projects</span></a></li>
                             <li><a href="#repositories" class="nav-link group flex items-center gap-2"><span>Repositories</span></a></li>
                             <li><a href="#videos" class="nav-link group flex items-center gap-2"><span>Videos</span></a></li>
+                            <li><a href="#photos" class="nav-link group flex items-center gap-2"><span>Photos</span></a></li>
                             <li><a href="#setup" class="nav-link group flex items-center gap-2"><span>Setup</span></a></li>
                         </ul>
                     </nav>
@@ -101,6 +102,12 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         </div>
                     </section>
+
+                    <section id="photos" class="section-card p-8 scroll-reveal">
+                        <h3 class="text-2xl font-bold text-white mb-6">Photo Gallery</h3>
+                        <div id="photo-gallery" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        </div>
+                    </section>
                     
                     <section id="setup" class="section-card p-8 scroll-reveal">
                         <h3 class="text-2xl font-bold text-white mb-6">My Setup</h3>
@@ -122,7 +129,17 @@
     </div>
     
     <div id="modal-container"></div>
-    <div id="lightbox-container"></div>
+    <div id="lightbox-overlay" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <img id="lightbox-img" class="lightbox-img" src="" alt="">
+            <div id="lightbox-caption" class="lightbox-caption"></div>
+            <div class="lightbox-nav prev" onclick="navigateLightbox(-1)">&#10094;</div>
+            <div class="lightbox-nav next" onclick="navigateLightbox(1)">&#10095;</div>
+            <div class="modal-close-btn" onclick="closeLightbox()">
+                <i data-feather="x" class="w-6 h-6"></i>
+            </div>
+        </div>
+    </div>
     <div id="theme-picker"></div>
     
     <div id="cli-container">

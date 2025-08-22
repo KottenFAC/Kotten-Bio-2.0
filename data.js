@@ -26,6 +26,13 @@ const portfolioData = {
     youtubeVideos: [
         { id: 'TA_9arUbIvw', title: 'cs2 hvh ft skeet.cc #1 / gamesense.pub' },
         { id: 'cPWil2cjOxs', title: 'cs2 hvh ft skeet.cc #2 / gamesense.pub' }
+    ],
+    photoGallery: [
+        "Arma3_x64 2025-08-22 17-45-58_327.png",
+        "Arma3_x64 2025-08-22 19-15-54_387.png",
+        "Arma3_x64 2025-08-22 19-17-57_269.png",
+        "Arma3_x64 2025-08-22 23-14-45_113.png",
+        "Arma3_x64 2025-08-22 23-17-54_359.png"
     ]
 };
 

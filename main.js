@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', () => {
         allPhotos = portfolioData.photoGallery; // Store all photos for lightbox navigation
 
         const photosHtml = allPhotos.map((photo, index) => `
-            <div class="gallery-item" onclick="openLightbox('photos/${photo}', ${index})">
-                <img src="photos/${photo}" alt="${photo}" class="w-full h-full object-cover rounded-lg shadow-lg">
+            <div class="gallery-item" onclick="openLightbox('photos/${photo}?v=1.0.0', ${index})">
+                <img src="photos/${photo}?v=1.0.0" alt="${photo}" class="w-full h-full object-cover rounded-lg shadow-lg">
             </div>
         `).join('');
 
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (currentPhotoIndex >= allPhotos.length) {
             currentPhotoIndex = 0;
         }
-        openLightbox(`photos/${allPhotos[currentPhotoIndex]}`, currentPhotoIndex);
+        openLightbox(`photos/${allPhotos[currentPhotoIndex]}?v=1.0.0`, currentPhotoIndex);
     }
 
     async function fetchGitHubRepos() {

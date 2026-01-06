@@ -356,7 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle Spotify info - show below username when playing
         if (data.listening_to_spotify) {
-            spotifyInfo.textContent = `${data.spotify.song} | by ${data.spotify.artist}`;
+            // Display on multiple lines for better readability
+            spotifyInfo.innerHTML = `${data.spotify.song}<br>by ${data.spotify.artist}`;
             spotifyInfo.classList.remove('hidden');
         } else {
             spotifyInfo.classList.add('hidden');

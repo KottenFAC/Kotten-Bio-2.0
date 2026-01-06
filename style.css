@@ -278,3 +278,10 @@ p { line-height: 1.6; }
 .gallery-item:hover img {
     transform: scale(1.1);
 }
+
+/* Particle Effects Animations */
+@keyframes signalPulse {
+    0% { opacity: 0; transform: scaleY(0); }
+    50% { opacity: 1; transform: scaleY(1); }
+    100% { opacity: 0; transform: scaleY(0); }
+}

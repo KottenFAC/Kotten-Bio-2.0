@@ -61,12 +61,82 @@ document.addEventListener('DOMContentLoaded', () => {
     function initInteractiveBg() {
         const bg = document.getElementById('interactive-bg');
         if (window.matchMedia('(pointer: fine)').matches) {
+            // Original radial gradient effect
             document.addEventListener('mousemove', e => {
                 requestAnimationFrame(() => {
                     bg.style.background = `radial-gradient(600px at ${e.clientX}px ${e.clientY}px, rgba(var(--glow-rgb), 0.08), transparent 80%)`;
                 });
             });
+
+            // Enhanced particle effects - Light trails
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+
+                // Create light trails
+                const trail = document.createElement('div');
+                trail.style.position = 'fixed';
+                trail.style.left = `${e.clientX}px`;
+                trail.style.top = `${e.clientY}px`;
+                trail.style.width = '4px';
+                trail.style.height = '4px';
+                trail.style.background = `radial-gradient(circle, rgba(var(--glow-rgb), 0.8), transparent)`;
+                trail.style.transform = 'translate(-50%, -50%)';
+                trail.style.pointerEvents = 'none';
+                trail.style.zIndex = '-1';
+                trail.style.filter = 'blur(2px)';
+                trail.style.opacity = '0.5';
+
+                document.body.appendChild(trail);
+
+                // Animate and remove trail
+                setTimeout(() => {
+                    trail.style.transition = 'all 1s ease-out';
+                    trail.style.opacity = '0';
+                    trail.style.transform = `translate(-50%, -50%) scale(${Math.random() * 3 + 1})`;
+                    setTimeout(() => trail.remove(), 1000);
+                }, 10);
+            });
         }
+
+        // Signal interference effects - spawn bars periodically
+        function spawnSignalBar() {
+            const bar = document.createElement('div');
+            bar.style.position = 'fixed';
+            bar.style.left = `${Math.random() * 100}%`;
+            bar.style.top = `${Math.random() * 100}%`;
+            bar.style.width = '2px';
+            bar.style.height = `${Math.random() * 50 + 10}px`;
+            bar.style.background = `linear-gradient(to bottom, transparent, rgba(var(--glow-rgb), 0.8), transparent)`;
+            bar.style.opacity = '0';
+            bar.style.pointerEvents = 'none';
+            bar.style.zIndex = '999';
+            bar.style.animation = `signalPulse ${Math.random() * 2 + 1}s infinite`;
+
+            document.body.appendChild(bar);
+
+            // Animate signal bar
+            setTimeout(() => {
+                bar.style.opacity = '1';
+                setTimeout(() => {
+                    bar.style.opacity = '0';
+                    setTimeout(() => bar.remove(), 500);
+                }, 2000);
+            }, 10);
+        }
+
+        // Spawn initial bars
+        for (let i = 0; i < 5; i++) {
+            setTimeout(spawnSignalBar, i * 300);
+        }
+
+        // Continue spawning bars periodically - sometimes spawn multiple
+        setInterval(() => {
+            const numBars = Math.random() < 0.3 ? 2 : 1; // 30% chance to spawn 2 bars
+            for (let i = 0; i < numBars; i++) {
+                setTimeout(spawnSignalBar, i * 200);
+            }
+        }, 4000); // Spawn every 4 seconds instead of 8
     }
 
     function initScrollReveal() {
@@ -84,13 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const sections = document.querySelectorAll('main section');
         const updateActiveLink = () => {
             let currentSectionId = '';
+
+            // Find the section that is currently most visible at the top of the viewport
             sections.forEach(section => {
                 const rect = section.getBoundingClientRect();
-                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+                if (rect.top <= 150 && rect.bottom >= 150) { // Section crosses the 150px mark from top
                     currentSectionId = section.id;
                 }
             });
+
+            // Fallback to about section if near top of page
             if (window.scrollY < 200) currentSectionId = 'about';
+
             navLinks.forEach(link => {
                 link.classList.toggle('active', link.getAttribute('href') === `#${currentSectionId}`);
             });

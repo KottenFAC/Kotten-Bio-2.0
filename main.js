@@ -354,13 +354,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Handle Spotify info - show below username when playing
+        // Handle Spotify info - show in dedicated section below profile
+        const spotifySection = document.getElementById('spotify-section');
         if (data.listening_to_spotify) {
-            // Display on multiple lines for better readability
-            spotifyInfo.innerHTML = `${data.spotify.song}<br>by ${data.spotify.artist}`;
-            spotifyInfo.classList.remove('hidden');
+            document.getElementById('spotify-song').textContent = data.spotify.song;
+            document.getElementById('spotify-artist').textContent = `by ${data.spotify.artist}`;
+            spotifySection.classList.remove('hidden');
         } else {
-            spotifyInfo.classList.add('hidden');
+            spotifySection.classList.add('hidden');
         }
 
         // Update Discord status

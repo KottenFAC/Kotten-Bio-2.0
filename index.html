@@ -55,16 +55,25 @@
 
                 <div id="social-links" class="flex items-center justify-center sm:justify-start gap-4"></div>
 
-                <div id="status-widget" class="pt-4 border-t border-gray-800/50">
+                <div id="status-widget" class="pt-4 border-t border-gray-800/50 space-y-3">
                      <div class="flex items-center justify-center sm:justify-start gap-4">
                         <img id="discord-avatar" src="" class="w-12 sm:w-14 h-12 sm:h-14 rounded-full flex-shrink-0 shadow-lg" alt="Discord Avatar"/>
                         <div id="status-container" class="text-sm min-w-0 flex flex-col justify-center">
                              <div class="font-semibold text-text-light truncate" id="discord-username">Loading...</div>
-                             <div id="spotify-info" class="text-xs text-text-dark truncate hidden"></div>
                              <div id="discord-info" class="flex items-center gap-2 text-text-dark text-xs">
                                 <div id="discord-status-dot" class="status-dot bg-gray-500"></div>
                                 <span id="discord-status-text">Connecting...</span>
                             </div>
+                        </div>
+                    </div>
+                    <div id="spotify-section" class="hidden">
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="text-green-400">🎵</span>
+                            <span class="text-text-light font-medium">Listening to Spotify</span>
+                        </div>
+                        <div class="ml-6 mt-1">
+                            <div class="font-medium text-text-light text-sm" id="spotify-song"></div>
+                            <div class="text-xs text-text-dark" id="spotify-artist"></div>
                         </div>
                     </div>
                 </div>

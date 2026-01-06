@@ -142,10 +142,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function initScrollReveal() {
         scrollObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
         }, { rootMargin: "0px 0px -100px 0px" });
-        
+
         document.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
     }
 
@@ -183,9 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const projectList = document.getElementById('project-list');
         projectList.innerHTML = portfolioData.projects.map((p, index) => `
-            <div data-technologies="${p.technologies.join(',')}" 
-                 onclick="openModal('project', '${p.id}')" 
-                 class="clickable-card p-4 rounded-lg group scroll-reveal focus:outline-none focus:ring-2 focus:ring-[var(--glow-accent)]" 
+            <div data-technologies="${p.technologies.join(',')}"
+                 onclick="openModal('project', '${p.id}')"
+                 class="clickable-card p-4 rounded-lg group scroll-reveal focus:outline-none focus:ring-2 focus:ring-[var(--glow-accent)]"
                  tabindex="0"
                  style="transition-delay: ${index * 100}ms">
                 <h5 class="font-semibold text-text-light group-hover:text-[var(--glow-primary)] transition-colors">${p.name}</h5>
@@ -287,10 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             repoList.innerHTML = displayRepos.map((repo, index) => `
-                <div data-language="${repo.language || ''}" 
-                     class="clickable-card p-4 rounded-lg scroll-reveal focus:outline-none focus:ring-2 focus:ring-[var(--glow-accent)]" 
-                     tabindex="0"
-                     style="transition-delay: ${index * 100}ms">
+                <div data-language="${repo.language || ''}"
+                     class="clickable-card p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--glow-accent)]"
+                     tabindex="0">
                     <a href="${repo.html_url}" target="_blank" class="font-semibold text-text-light hover:text-[var(--glow-primary)] transition-colors">${repo.name}</a>
                     <p class="text-sm text-text-dark mt-1 mb-3">${repo.description || 'No description provided.'}</p>
                     <div class="flex items-center gap-4 text-xs text-text-dark">
@@ -303,8 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `).join('');
-            
-            repoList.querySelectorAll('.scroll-reveal').forEach(el => scrollObserver.observe(el));
 
         } catch (error) { 
             console.error('GitHub API fetch failed:', error);
@@ -525,16 +524,92 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    function initScrollProgress() {
+        const progressBar = document.getElementById('scroll-progress');
+        const updateProgress = () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            progressBar.style.transform = `scaleX(${scrollPercent / 100})`;
+        };
+
+        window.addEventListener('scroll', updateProgress);
+        updateProgress();
+    }
+
+    function initSectionDots() {
+        const dotsContainer = document.getElementById('section-dots');
+
+        // Only create dots for sections that have navbar links
+        const navSections = ['about', 'projects', 'repositories', 'videos', 'photos', 'setup'];
+
+        navSections.forEach((sectionId) => {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                const dot = document.createElement('div');
+                dot.className = 'section-dot';
+                dot.setAttribute('data-section', sectionId);
+                dot.addEventListener('click', () => {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                });
+                dotsContainer.appendChild(dot);
+            }
+        });
+
+        // Use the same logic as the navbar for consistency
+        const updateActiveDot = () => {
+            let currentSectionId = '';
+
+            // Find the section that is currently most visible at the top of the viewport
+            navSections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 150 && rect.bottom >= 150) { // Section crosses the 150px mark from top
+                        currentSectionId = sectionId;
+                    }
+                }
+            });
+
+            // Fallback to about section if near top of page
+            if (window.scrollY < 200) currentSectionId = 'about';
+
+            document.querySelectorAll('.section-dot').forEach(dot => {
+                dot.classList.toggle('active', dot.getAttribute('data-section') === currentSectionId);
+            });
+        };
+
+        window.addEventListener('scroll', updateActiveDot);
+        updateActiveDot();
+    }
+
+
+
     // Expose functions to global scope for onclick events
     window.openLightbox = openLightbox;
     window.closeLightbox = closeLightbox;
     window.navigateLightbox = navigateLightbox;
 
+    function initParallaxEffects() {
+        const parallaxBg = document.getElementById('parallax-bg');
+
+        const updateParallax = () => {
+            const scrolled = window.scrollY;
+            const rate = scrolled * -0.5;
+            parallaxBg.style.transform = `translateY(${rate}px)`;
+        };
+
+        window.addEventListener('scroll', updateParallax);
+    }
+
     // ** Run Initializers **
-    initLoaderAndData(); 
+    initLoaderAndData();
     initInteractiveBg();
     initScrollReveal();
     initNavObserver();
+    initScrollProgress();
+    initSectionDots();
+    initParallaxEffects();
     initDataRenders();
     initThemePicker();
     initCLI();

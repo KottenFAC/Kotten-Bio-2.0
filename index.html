@@ -57,13 +57,11 @@
 
                 <div id="status-widget" class="pt-4 border-t border-gray-800/50">
                      <div class="flex items-center justify-center sm:justify-start gap-4">
-                        <img id="album-art" src="" class="w-12 sm:w-14 h-12 sm:h-14 rounded-md flex-shrink-0 hidden shadow-lg" alt="Spotify Album Art"/>
+                        <img id="discord-avatar" src="" class="w-12 sm:w-14 h-12 sm:h-14 rounded-full flex-shrink-0 shadow-lg" alt="Discord Avatar"/>
                         <div id="status-container" class="text-sm min-w-0 flex flex-col justify-center">
-                             <div id="spotify-info" class="hidden">
-                                <div class="font-semibold text-text-light truncate" id="spotify-song"></div>
-                                <div class="text-xs text-text-dark truncate" id="spotify-artist"></div>
-                            </div>
-                            <div id="discord-info" class="flex items-center gap-2 text-text-dark text-xs">
+                             <div class="font-semibold text-text-light truncate" id="discord-username">Loading...</div>
+                             <div id="spotify-info" class="text-xs text-text-dark truncate hidden"></div>
+                             <div id="discord-info" class="flex items-center gap-2 text-text-dark text-xs">
                                 <div id="discord-status-dot" class="status-dot bg-gray-500"></div>
                                 <span id="discord-status-text">Connecting...</span>
                             </div>

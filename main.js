@@ -278,9 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const repoList = document.getElementById('repo-list');
         try {
             const response = await fetch(`https://api.github.com/users/${portfolioData.githubUsername}/repos?sort=pushed&per_page=30`);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                if (response.status === 403) {
+                    throw new Error('GitHub API rate limit exceeded. Try again in an hour.');
+                } else if (response.status === 404) {
+                    throw new Error('GitHub user not found.');
+                } else {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            }
             let repos = await response.json();
-            
+
+            // Ensure repos is an array
+            if (!Array.isArray(repos)) {
+                throw new Error('Invalid response from GitHub API');
+            }
+
             const displayRepos = repos.filter(repo => !repo.fork).slice(0, 6);
 
             if (displayRepos.length === 0) {
@@ -299,15 +312,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="h-3 w-3 rounded-full" style="background-color: ${languageColors[repo.language] || languageColors.default};"></span>
                             ${repo.language || 'N/A'}
                         </span>
-                        <span class="flex items-center gap-1"><i data-feather="star" class="w-3 h-3"></i>${repo.stargazers_count}</span>
-                        <span class="flex items-center gap-1"><i data-feather="git-branch" class="w-3 h-3"></i>${repo.forks_count}</span>
+                        <span class="flex items-center gap-1"><i data-feather="star" class="w-3 h-3"></i>${repo.stargazers_count || 0}</span>
+                        <span class="flex items-center gap-1"><i data-feather="git-branch" class="w-3 h-3"></i>${repo.forks_count || 0}</span>
                     </div>
                 </div>
             `).join('');
 
-        } catch (error) { 
+        } catch (error) {
             console.error('GitHub API fetch failed:', error);
-            repoList.innerHTML = `<p class="text-red-400 text-sm">Failed to load repositories. Please check the console for details.</p>`;
+            repoList.innerHTML = `<p class="text-red-400 text-sm">${error.message}</p>`;
         } finally {
             feather.replace({width: '0.75rem', height: '0.75rem'});
         }
@@ -319,16 +332,37 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function updateStatusWidget(data) {
         if (!data) return;
-        const spotifyInfo = document.getElementById('spotify-info'), albumArt = document.getElementById('album-art');
-        if (data.listening_to_spotify) {
-            spotifyInfo.classList.remove('hidden'); albumArt.classList.remove('hidden');
-            albumArt.src = data.spotify.album_art_url;
-            document.getElementById('spotify-song').textContent = data.spotify.song;
-            document.getElementById('spotify-artist').textContent = `by ${data.spotify.artist}`;
-        } else {
-            spotifyInfo.classList.add('hidden'); albumArt.classList.add('hidden');
+
+        const discordAvatar = document.getElementById('discord-avatar');
+        const discordUsername = document.getElementById('discord-username');
+        const spotifyInfo = document.getElementById('spotify-info');
+        const statusDot = document.getElementById('discord-status-dot');
+        const statusText = document.getElementById('discord-status-text');
+
+        // Always show Discord user info
+        if (data.discord_user) {
+            // Set Discord username
+            const username = data.discord_user.username;
+            const discriminator = data.discord_user.discriminator;
+            const displayName = discriminator && discriminator !== '0' ? `${username}#${discriminator}` : username;
+            discordUsername.textContent = displayName;
+
+            // Set Discord avatar
+            if (data.discord_user.avatar) {
+                const avatarUrl = `https://cdn.discordapp.com/avatars/${data.discord_user.id}/${data.discord_user.avatar}.png?size=128`;
+                discordAvatar.src = avatarUrl;
+            }
         }
-        const statusDot = document.getElementById('discord-status-dot'), statusText = document.getElementById('discord-status-text');
+
+        // Handle Spotify info - show below username when playing
+        if (data.listening_to_spotify) {
+            spotifyInfo.textContent = `${data.spotify.song} | by ${data.spotify.artist}`;
+            spotifyInfo.classList.remove('hidden');
+        } else {
+            spotifyInfo.classList.add('hidden');
+        }
+
+        // Update Discord status
         let status, colorClass;
         switch(data.discord_status) {
             case 'online': status = 'Online'; colorClass = 'bg-green-400'; break;
@@ -336,7 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'dnd': status = 'Do Not Disturb'; colorClass = 'bg-red-400'; break;
             default: status = 'Offline'; colorClass = 'bg-gray-500'; break;
         }
-        statusDot.className = `status-dot ${colorClass}`; statusText.textContent = status;
+        statusDot.className = `status-dot ${colorClass}`;
+        statusText.textContent = status;
     }
 
     /**

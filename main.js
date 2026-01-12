@@ -58,13 +58,117 @@ document.addEventListener('DOMContentLoaded', () => {
         mainWrapper.classList.add('loaded');
     }
 
+    function initParticles() {
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let lastScrollY = window.scrollY;
+        let maxScrollY = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function createParticle(x, y) {
+            return {
+                x: x !== undefined ? x : Math.random() * canvas.width,
+                y: y !== undefined ? y : Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                size: Math.random() * 2 + 1,
+                opacity: Math.random() * 0.16 + 0.12,
+                fixed: x !== undefined // Mark particles spawned by scroll as fixed
+            };
+        }
+
+        function initParticleArray() {
+            const particleCount = Math.min(
+                Math.floor((canvas.width * canvas.height) / 20000),
+                80 // Reduced initial count since we'll spawn more on scroll
+            );
+            particles = Array.from(
+                { length: particleCount },
+                () => createParticle()
+            );
+        }
+
+        function spawnParticlesOnScroll() {
+            const currentScrollY = window.scrollY;
+            const viewportHeight = window.innerHeight;
+
+            // Spawn new particles when scrolling down
+            if (currentScrollY > maxScrollY) {
+                const scrollDiff = currentScrollY - maxScrollY;
+                const particlesToSpawn = Math.floor(scrollDiff / 50); // Spawn every 50px scrolled
+
+                for (let i = 0; i < particlesToSpawn; i++) {
+                    // Spawn at bottom of viewport
+                    const x = Math.random() * canvas.width;
+                    const y = viewportHeight + Math.random() * 100; // Slightly below viewport
+                    particles.push(createParticle(x, y + currentScrollY)); // Add scroll offset
+                }
+
+                maxScrollY = currentScrollY;
+            }
+
+            lastScrollY = currentScrollY;
+        }
+
+        function updateParticles() {
+            // Only update non-fixed particles (original ones that can move)
+            for (const p of particles) {
+                if (!p.fixed) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                }
+            }
+
+            // Keep all particles visible - no cleanup since they scroll with content
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Get current theme color from CSS variables
+            const themeColor = getComputedStyle(document.documentElement).getPropertyValue('--glow-rgb').trim();
+            const rgbValues = themeColor.split(',').map(v => parseInt(v.trim()));
+
+            for (const p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${rgbValues[0]},${rgbValues[1]},${rgbValues[2]},${p.opacity})`;
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            spawnParticlesOnScroll();
+            updateParticles();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            // Don't re-init particles on resize to preserve scroll-spawned ones
+        });
+
+
+
+        resizeCanvas();
+        initParticleArray();
+        animate();
+    }
+
     function initInteractiveBg() {
         const bg = document.getElementById('interactive-bg');
         if (window.matchMedia('(pointer: fine)').matches) {
             // Original radial gradient effect
             document.addEventListener('mousemove', e => {
                 requestAnimationFrame(() => {
-                    bg.style.background = `radial-gradient(600px at ${e.clientX}px ${e.clientY}px, rgba(var(--glow-rgb), 0.08), transparent 80%)`;
+                    bg.style.background = `radial-gradient(600px at ${e.clientX}px ${e.clientY}px, rgba(var(--glow-rgb), 0.03), transparent 80%)`;
                 });
             });
 
@@ -80,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 trail.style.top = `${e.clientY}px`;
                 trail.style.width = '4px';
                 trail.style.height = '4px';
-                trail.style.background = `radial-gradient(circle, rgba(var(--glow-rgb), 0.8), transparent)`;
+                trail.style.background = `radial-gradient(circle, rgba(var(--glow-rgb), 0.4), transparent)`;
                 trail.style.transform = 'translate(-50%, -50%)';
                 trail.style.pointerEvents = 'none';
                 trail.style.zIndex = '-1';
@@ -107,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bar.style.top = `${Math.random() * 100}%`;
             bar.style.width = '2px';
             bar.style.height = `${Math.random() * 50 + 10}px`;
-            bar.style.background = `linear-gradient(to bottom, transparent, rgba(var(--glow-rgb), 0.8), transparent)`;
+            bar.style.background = `linear-gradient(to bottom, transparent, rgba(var(--glow-rgb), 0.4), transparent)`;
             bar.style.opacity = '0';
             bar.style.pointerEvents = 'none';
             bar.style.zIndex = '999';
@@ -641,6 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ** Run Initializers **
     initLoaderAndData();
+    initParticles();
     initInteractiveBg();
     initScrollReveal();
     initNavObserver();

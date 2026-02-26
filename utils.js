@@ -10,15 +10,14 @@ let activeSkill = null;
 function applyTheme(themeName) {
     const theme = colorThemes[themeName];
     if (!theme) return;
-
+    
     const root = document.documentElement;
     root.style.setProperty('--glow-primary', theme.primary);
     root.style.setProperty('--glow-secondary', theme.secondary);
     root.style.setProperty('--border-color', `rgba(${theme.rgb}, 0.25)`);
     root.style.setProperty('--border-hover', `rgba(${theme.rgb}, 0.6)`);
     root.style.setProperty('--glow-rgb', theme.rgb);
-    root.style.setProperty('--accent-rgb', theme.rgb);
-
+    
     document.querySelectorAll('.color-swatch').forEach(sw => {
         sw.classList.toggle('active', sw.dataset.themeName === themeName);
     });

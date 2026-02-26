@@ -1,16 +1,14 @@
 :root {
-    --bg: #0b0f1a;
-    --ui-panel: rgba(17, 24, 39, 0.92);
-    --ui-modal: rgba(12, 17, 28, 0.95);
+    --bg-dark: #010206;
+    --ui-panel: #10121A;
+    --ui-modal: #181A24;
     --glow-primary: #4A80F0;
     --glow-secondary: #87b1ff;
     --glow-accent: #FFD700;
-    --border: rgba(255, 255, 255, 0.06);
-    --border-strong: rgba(255, 255, 255, 0.1);
-    --accent: #9f7aea;
-    --accent-soft: rgba(159, 122, 234, 0.18);
-    --text: #e5e7eb;
-    --muted: #94a3b8;
+    --border-color: rgba(74, 128, 240, 0.25);
+    --border-hover: rgba(74, 128, 240, 0.6);
+    --text-light: #e0eafc;
+    --text-dark: #b0b8d3;
     --font-family: 'IBM Plex Mono', monospace;
     --glow-rgb: 74, 128, 240;
 }
@@ -19,39 +17,12 @@ html { scroll-behavior: smooth; }
 
 body {
     font-family: var(--font-family);
-    background-color: var(--bg);
-    color: var(--text);
-    position: relative;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
     overflow-x: hidden;
-    min-height: 100vh;
-}
-
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 20%, rgba(var(--glow-rgb), 0.03), transparent 70%),
-                radial-gradient(circle at 80% 10%, rgba(var(--accent-rgb, 139, 92, 246), 0.02), transparent 70%);
-    pointer-events: none;
-    z-index: -2;
-}
-
-body::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 96px 96px;
-    opacity: 0.6;
-    pointer-events: none;
-    z-index: -2;
+    background-image: radial-gradient(circle at center, rgba(var(--glow-rgb), 0.05) 0.5px, transparent 0.5px);
+    background-size: 30px 30px; 
+    background-position: -15px -15px;
 }
 
 #interactive-bg {
@@ -247,15 +218,20 @@ p { line-height: 1.6; }
     box-shadow: 0 0 10px rgba(var(--glow-rgb), 0.5);
 }
 
-/* Particles Canvas */
-#particles {
-    position: absolute;
+/* Parallax background */
+#parallax-bg {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    z-index: -1;
+    height: 300vh; /* Much taller than viewport for full scroll coverage */
     pointer-events: none;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(var(--glow-rgb), 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(var(--glow-rgb), 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(var(--glow-rgb), 0.05) 0%, transparent 50%);
+    transform: translateZ(0);
 }
 
 /* Enhanced card animations */
